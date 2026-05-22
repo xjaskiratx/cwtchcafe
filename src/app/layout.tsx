@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   description: "Experience the heart of the community at Cwtch Cafe. We serve artisanal roasts and handmade pastries in a warm, welcoming atmosphere.",
 };
 
+import BackgroundManager from "./components/BackgroundManager";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,8 +39,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${dmMono.variable} ${ebGaramond.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-black overflow-x-hidden" suppressHydrationWarning>
+        <BackgroundManager />
+        <main className="relative z-10 min-h-screen">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
