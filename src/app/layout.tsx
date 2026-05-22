@@ -24,8 +24,22 @@ const ebGaramond = EB_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://cwtchcafe.com"),
   title: "Cwtch Cafe | Artisanal Coffee & Cozy Vibes",
   description: "Experience the heart of the community at Cwtch Cafe. We serve artisanal roasts and handmade pastries in a warm, welcoming atmosphere.",
+  openGraph: {
+    title: "Cwtch Cafe | Artisanal Coffee & Cozy Vibes",
+    description: "Experience the heart of the community at Cwtch Cafe. We serve artisanal roasts and handmade pastries in a warm, welcoming atmosphere.",
+    url: "https://cwtchcafe.com",
+    siteName: "Cwtch Cafe",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cwtch Cafe | Artisanal Coffee & Cozy Vibes",
+    description: "Experience the heart of the community at Cwtch Cafe. We serve artisanal roasts and handmade pastries in a warm, welcoming atmosphere.",
+  },
 };
 
 import BackgroundManager from "./components/BackgroundManager";

@@ -12,16 +12,66 @@ export default function Contact() {
     email: "",
     message: ""
   });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: { name?: string; email?: string; message?: string } = {};
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (!trimmedName) {
+      newErrors.name = "Name is required";
+    } else if (trimmedName.length < 2) {
+      newErrors.name = "Name must be at least 2 characters";
+    } else if (trimmedName.length > 100) {
+      newErrors.name = "Name must not exceed 100 characters";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!trimmedEmail) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(trimmedEmail)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!trimmedMessage) {
+      newErrors.message = "Message is required";
+    } else if (trimmedMessage.length < 10) {
+      newErrors.message = "Message must be at least 10 characters";
+    } else if (trimmedMessage.length > 2000) {
+      newErrors.message = "Message must not exceed 2000 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-    alert("Message sent to the sanctuary.");
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    try {
+      // Simulate API call to send message
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      console.log("Form submitted:", formData);
+      setSubmitSuccess(true);
+      setFormData({ name: "", email: "", message: "" });
+      setErrors({});
+    } catch (err) {
+      console.error("Submission error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
+    setSubmitSuccess(false);
+    setErrors({});
     setTimeout(() => {
       document.getElementById('contact-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
@@ -29,6 +79,8 @@ export default function Contact() {
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
+    setSubmitSuccess(false);
+    setErrors({});
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -117,55 +169,112 @@ export default function Contact() {
                 <div id="contact-form-container" className="relative bg-white/30 backdrop-blur-2xl rounded-2xl p-6 md:p-8 border border-white/50 shadow-2xl h-[50vh] flex flex-col justify-center">
                   <button 
                     onClick={handleCloseForm} 
-                    className="absolute top-4 right-4 text-[#570000] hover:text-black transition-colors p-1"
+                    className="absolute top-4 right-4 text-[#570000] hover:text-black transition-colors p-1 z-30"
                     title="Close"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <form onSubmit={handleSubmit} className="space-y-5 overflow-y-auto scrollbar-hide pr-2 mt-4">
-              <div className="space-y-1">
-                <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Your Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-transparent border-b border-[#570000]/30 py-1.5 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-2xl text-[#570000] placeholder:text-[#570000]/40"
-                  placeholder="e.g. Julian"
-                />
-              </div>
 
-              <div className="space-y-1">
-                <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Email Address</label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-[#570000]/30 py-1.5 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-2xl text-[#570000] placeholder:text-[#570000]/40"
-                  placeholder="hello@example.com"
-                />
-              </div>
+                  <AnimatePresence mode="wait">
+                    {submitSuccess ? (
+                      <motion.div
+                        key="success-message"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-center space-y-5 py-4 flex flex-col items-center justify-center h-full"
+                      >
+                        <div className="w-16 h-16 rounded-full bg-[#570000]/10 flex items-center justify-center text-[#570000] shadow-inner">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <div className="space-y-2">
+                          <h3 className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Message Sent</h3>
+                          <p className="font-[family-name:var(--font-eb-garamond)] text-2xl italic text-[#570000] max-w-xs leading-snug px-4">
+                            Your thoughts have found safe harbor in our sanctuary.
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleCloseForm}
+                          className={styles.discoverButton + " !py-2.5 !px-6 !bg-[#570000] !text-white hover:!bg-white hover:!text-[#570000] !text-sm !mt-2 shadow-md"}
+                        >
+                          Return Home
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto scrollbar-hide pr-2 mt-4 flex flex-col justify-between h-full py-2">
+                        <div className="space-y-4">
+                          <div className="space-y-1">
+                            <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Your Name</label>
+                            <input
+                              type="text"
+                              required
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              className="w-full bg-transparent border-b border-[#570000]/30 py-1 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-xl text-[#570000] placeholder:text-[#570000]/40"
+                              placeholder="e.g. Julian"
+                            />
+                            {errors.name && (
+                              <p className="text-[#570000] text-[10px] font-[family-name:var(--font-dm-mono)] tracking-wider mt-0.5 opacity-90">{errors.name}</p>
+                            )}
+                          </div>
 
-              <div className="space-y-1">
-                <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Your Message</label>
-                <textarea
-                  required
-                  rows={2}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full bg-transparent border-b border-[#570000]/30 py-1.5 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-xl text-[#570000] resize-none placeholder:text-[#570000]/40"
-                  placeholder="Tell us about your longing..."
-                />
-              </div>
+                          <div className="space-y-1">
+                            <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Email Address</label>
+                            <input
+                              type="email"
+                              required
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              className="w-full bg-transparent border-b border-[#570000]/30 py-1 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-xl text-[#570000] placeholder:text-[#570000]/40"
+                              placeholder="hello@example.com"
+                            />
+                            {errors.email && (
+                              <p className="text-[#570000] text-[10px] font-[family-name:var(--font-dm-mono)] tracking-wider mt-0.5 opacity-90">{errors.email}</p>
+                            )}
+                          </div>
 
-              <button type="submit" className={styles.discoverButton + " w-full !mt-6 !py-3 !bg-[#570000] !text-white hover:!bg-white hover:!text-[#570000]"}>
-                Send Message
-              </button>
-            </form>
-          </div>
+                          <div className="space-y-1">
+                            <label className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.4em] text-[#570000] font-bold">Your Message</label>
+                            <textarea
+                              required
+                              rows={2}
+                              value={formData.message}
+                              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                              className="w-full bg-transparent border-b border-[#570000]/30 py-1 focus:border-[#570000] transition-colors outline-none font-[family-name:var(--font-eb-garamond)] text-lg text-[#570000] resize-none placeholder:text-[#570000]/40"
+                              placeholder="Tell us about your longing..."
+                            />
+                            {errors.message && (
+                              <p className="text-[#570000] text-[10px] font-[family-name:var(--font-dm-mono)] tracking-wider mt-0.5 opacity-90">{errors.message}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <button 
+                          type="submit" 
+                          disabled={isSubmitting}
+                          className={styles.discoverButton + " w-full !mt-4 !py-2.5 !bg-[#570000] !text-white hover:!bg-white hover:!text-[#570000] disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"}
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Sending...
+                            </>
+                          ) : (
+                            "Send Message"
+                          )}
+                        </button>
+                      </form>
+                    )}
+                  </AnimatePresence>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

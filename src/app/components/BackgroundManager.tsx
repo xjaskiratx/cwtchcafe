@@ -19,6 +19,7 @@ const backgrounds: Record<string, { desktop: string; mobile?: string }> = {
   },
   '/dictionary': {
     desktop: '/images/dict_bg.png',
+    mobile: '/images/dict_mobile_bg.png',
   },
   '/contact': {
     desktop: '/images/contact_bg.png',

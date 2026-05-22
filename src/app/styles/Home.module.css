@@ -78,42 +78,6 @@
   color: white;
 }
 
-.scrollCue {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  display: flex;
-  width: 4rem;
-  height: 4rem;
-  transform: translateX(-50%);
-  align-items: center;
-  justify-content: center;
-}
-
-.scrollCueTrack {
-  position: relative;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-}
-
-.chevronContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.chevron {
-  width: 1.2rem;
-  height: 1.2rem;
-  border-right: 4px solid #e4c89d;
-  border-bottom: 4px solid #e4c89d;
-  transform: rotate(45deg);
-  animation: scrollCueChevron 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 0.5rem rgb(228 200 157 / 0.4));
-}
-
 .navLink {
   position: relative;
   font-size: 0.875rem;
@@ -154,16 +118,3 @@
   }
 }
 
-@keyframes scrollCueChevron {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px) rotate(45deg);
-  }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(10px) rotate(45deg);
-  }
-}
