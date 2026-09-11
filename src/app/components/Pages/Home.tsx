@@ -12,7 +12,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative h-screen w-full flex flex-col justify-start pt-[20vh] px-[2%]">
-        <div className="relative w-full -mt-[72px]">
+        <div className="relative w-full mt-2 md:-mt-[72px]">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

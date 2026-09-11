@@ -11,7 +11,7 @@ export default function About() {
 
       {/* Hero Section for About */}
       <section className="relative h-screen w-full flex flex-col justify-start pt-[20vh] px-[2%] overflow-hidden">
-        <div className="relative z-10 -mt-[72px]">
+        <div className="relative z-10 mt-2 md:-mt-[72px]">
           <motion.div
             className="flex flex-col items-start"
             initial={{ opacity: 0, y: 30 }}
