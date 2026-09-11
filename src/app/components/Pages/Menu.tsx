@@ -129,17 +129,30 @@ export default function Menu() {
             className="max-w-4xl"
           >
             <h1 className={styles.aboutTitle} style={{ color: '#570000' }}>The Menu</h1>
-            <Link href="/dictionary">
-              <button className={styles.discoverButton + " mt-8 !text-[13px] !py-2 !px-2 !tracking-[0.4em]"}>
-                Explore the Dictionary
+            <div className="flex flex-wrap gap-4 mt-8">
+              <button 
+                onClick={() => {
+                  const element = document.getElementById("menu-sections");
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className={styles.discoverButton + " !text-[13px] !py-2 !px-4 !tracking-[0.4em]"}
+              >
+                Explore Menu
               </button>
-            </Link>
+              <Link href="/dictionary">
+                <button className={styles.discoverButton + " !text-[13px] !py-2 !px-4 !tracking-[0.4em]"}>
+                  Explore the Dictionary
+                </button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Menu Sections */}
-      <section className="px-[2%] pb-12 md:pb-32">
+      <section id="menu-sections" className="px-[2%] pb-12 md:pb-32">
         <div className="max-w-4xl space-y-12">
           {menuData.map((section, sectionIdx) => {
             const isExpanded = expandedSections[section.category];
